@@ -32,12 +32,12 @@
             this.labelID = new System.Windows.Forms.Label();
             this.textBoxID = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonCncl = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.labelCat = new System.Windows.Forms.Label();
             this.textBoxTit = new System.Windows.Forms.TextBox();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.labelCat = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.buttonCncl = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.buttonDel = new System.Windows.Forms.Button();
@@ -92,6 +92,43 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "BOOKS ";
             // 
+            // buttonCncl
+            // 
+            this.buttonCncl.Location = new System.Drawing.Point(391, 173);
+            this.buttonCncl.Name = "buttonCncl";
+            this.buttonCncl.Size = new System.Drawing.Size(112, 34);
+            this.buttonCncl.TabIndex = 7;
+            this.buttonCncl.Text = "CANCEL";
+            this.buttonCncl.UseVisualStyleBackColor = true;
+            this.buttonCncl.Click += new System.EventHandler(this.buttonCncl_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(256, 173);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(112, 34);
+            this.buttonSave.TabIndex = 4;
+            this.buttonSave.Text = "SAVE";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(100, 134);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(416, 33);
+            this.comboBox1.TabIndex = 6;
+            // 
+            // labelCat
+            // 
+            this.labelCat.AutoSize = true;
+            this.labelCat.Location = new System.Drawing.Point(7, 137);
+            this.labelCat.Name = "labelCat";
+            this.labelCat.Size = new System.Drawing.Size(84, 25);
+            this.labelCat.TabIndex = 5;
+            this.labelCat.Text = "Category";
+            // 
             // textBoxTit
             // 
             this.textBoxTit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -109,41 +146,6 @@
             this.labelTitle.TabIndex = 3;
             this.labelTitle.Text = "Title";
             // 
-            // labelCat
-            // 
-            this.labelCat.AutoSize = true;
-            this.labelCat.Location = new System.Drawing.Point(7, 137);
-            this.labelCat.Name = "labelCat";
-            this.labelCat.Size = new System.Drawing.Size(84, 25);
-            this.labelCat.TabIndex = 5;
-            this.labelCat.Text = "Category";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(100, 134);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(416, 33);
-            this.comboBox1.TabIndex = 6;
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.Location = new System.Drawing.Point(256, 173);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(112, 34);
-            this.buttonSave.TabIndex = 4;
-            this.buttonSave.Text = "SAVE";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            // 
-            // buttonCncl
-            // 
-            this.buttonCncl.Location = new System.Drawing.Point(391, 173);
-            this.buttonCncl.Name = "buttonCncl";
-            this.buttonCncl.Size = new System.Drawing.Size(112, 34);
-            this.buttonCncl.TabIndex = 7;
-            this.buttonCncl.Text = "CANCEL";
-            this.buttonCncl.UseVisualStyleBackColor = true;
-            // 
             // buttonAdd
             // 
             this.buttonAdd.Location = new System.Drawing.Point(12, 496);
@@ -152,6 +154,7 @@
             this.buttonAdd.TabIndex = 5;
             this.buttonAdd.Text = "ADD";
             this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // buttonEdit
             // 
@@ -161,6 +164,7 @@
             this.buttonEdit.TabIndex = 6;
             this.buttonEdit.Text = "EDIT";
             this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // buttonDel
             // 
@@ -170,6 +174,7 @@
             this.buttonDel.TabIndex = 7;
             this.buttonDel.Text = "DELETE";
             this.buttonDel.UseVisualStyleBackColor = true;
+            this.buttonDel.Click += new System.EventHandler(this.buttonDel_Click);
             // 
             // BooksForm
             // 

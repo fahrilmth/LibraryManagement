@@ -50,9 +50,10 @@
             // textBoxEmail
             // 
             this.textBoxEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxEmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxEmail.Location = new System.Drawing.Point(247, 206);
             this.textBoxEmail.Name = "textBoxEmail";
-            this.textBoxEmail.PlaceholderText = "Name";
+            this.textBoxEmail.PlaceholderText = "  Name";
             this.textBoxEmail.Size = new System.Drawing.Size(196, 31);
             this.textBoxEmail.TabIndex = 1;
             // 
@@ -70,9 +71,10 @@
             // textBoxNIS
             // 
             this.textBoxNIS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxNIS.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxNIS.Location = new System.Drawing.Point(247, 243);
             this.textBoxNIS.Name = "textBoxNIS";
-            this.textBoxNIS.PlaceholderText = "NIS";
+            this.textBoxNIS.PlaceholderText = "  NIS";
             this.textBoxNIS.Size = new System.Drawing.Size(196, 31);
             this.textBoxNIS.TabIndex = 3;
             // 

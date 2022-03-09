@@ -5,6 +5,7 @@ namespace LibraryManagement
     public partial class LoginForm : Form
     {
         private readonly PerpusDatabase _db;
+        public static string CurrentUser { get; private set; }
         public LoginForm()
         {
             InitializeComponent();
@@ -25,14 +26,15 @@ namespace LibraryManagement
             if (u.Name != textBoxEmail.Text)
             {
                 MessageBox.Show("Name not registered as member", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                return;
+               
             }
             if (u == null)
             {
                 MessageBox.Show("Invalid account", "Login failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+               
             }
 
+            CurrentUser = u.Name;
 
             this.Hide();
             MainMenu mm = new MainMenu();

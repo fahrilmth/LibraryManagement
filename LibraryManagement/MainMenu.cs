@@ -14,7 +14,6 @@ namespace LibraryManagement
     public partial class MainMenu : Form
     {
         private readonly PerpusDatabase _db;
-        private string _user;
         
         public MainMenu()
         {
@@ -25,8 +24,7 @@ namespace LibraryManagement
         private void MainMenu_Load(object sender, EventArgs e)
         {
             LoadData();
-            var name = _db.Users.Find(labelName.Text);
-            name.Name = labelName.Text;
+            labelName.Text = LoginForm.CurrentUser;
         }
 
         private void LoadData()
@@ -63,6 +61,11 @@ namespace LibraryManagement
         {
             BooksForm bk = new BooksForm();
             bk.Show();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
