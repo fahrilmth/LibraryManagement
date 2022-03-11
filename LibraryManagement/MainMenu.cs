@@ -61,7 +61,26 @@ namespace LibraryManagement
                 }
                 ).ToList();
 
-            
+            /*dgvLoanData.DataSource =
+                (
+                from b in _db.Borrowings
+                from u in _db.Users
+                from bu in _db.Books
+                orderby b.Id
+                select new
+                {
+                    b.Id,
+                    b.Book,
+                    u.Name,
+                    u.Class,
+                    u.Nis,
+                    u.Departement,
+                    u.Borrowings,
+                    bu.Title,
+                    bu.Category
+                }
+                ).ToList();
+            */
         }
 
         private void AddButton()
@@ -151,12 +170,11 @@ namespace LibraryManagement
 
         private void dgvLoanData_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            status = "Completed";
             if (e.ColumnIndex != 4)
                 return;
             if (e.RowIndex < 0)
                 return;
-            status = "Completed";   
-            
         }
 
         private void buttonNewBorr_Click(object sender, EventArgs e)
