@@ -15,10 +15,12 @@ namespace LibraryManagement
     public partial class MainMenu : Form
     {
         private readonly PerpusDatabase _db;
-        public string status = "OnGoing";
+        private enum Status { OnGoing, Completed }
+        private Status _sts;
         private enum Mode {None, Add, Edit }
         private Mode _mode;
         private Borrowing _br;
+        private RegisterForm _reg;
 
         public MainMenu()
         {
@@ -33,17 +35,20 @@ namespace LibraryManagement
             LoadData();
             labelName.Text = LoginForm.CurrentUser;
 
+            groupBox1.Enabled = false;
+
             comboBoxUser.DataSource = (from u in _db.Users select u.Name).ToList();
             comboBoxUser.SelectedItem = null;
 
             comboBoxBook.DataSource = (from b in _db.Books select b.Title).ToList();
             comboBoxBook.SelectedItem = null;
+            
+            string status = "OnGoing";
 
-            dgvLoanData.Columns.Add(new DataGridViewButtonColumn()
+            dgvLoanData.Columns.Add(new DataGridViewCheckBoxColumn()
             {
-                Text = status,
                 HeaderText = "Status",
-                UseColumnTextForButtonValue = true
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
             });
         }
 
@@ -52,6 +57,7 @@ namespace LibraryManagement
             dgvLoanData.DataSource =
                 (
                 from brw in _db.Borrowings
+                where brw.Book.Title.Contains(textBox1.Text) || brw.User.Name.Contains(textBox1.Text)
                 select new
                 {
                     brw.Id,
@@ -81,19 +87,11 @@ namespace LibraryManagement
                 }
                 ).ToList();
             */
+
+
         }
 
-        private void AddButton()
-        {
-            dgvLoanData.Columns.Add(new DataGridViewButtonColumn()
-            {
-                Text = status,
-                HeaderText = "Status",
-                UseColumnTextForButtonValue = true
-            });
-        }
-
-/*        private void EditData()
+        /*private void EditData()
         {
             var b = _db.Borrowings.Find(textBoxID.Text);
 
@@ -122,7 +120,7 @@ namespace LibraryManagement
         private void Clear()
         {
             textBoxID.Text = dateTimePicker1.Text = String.Empty;
-            comboBoxUser.SelectedItem = comboBoxUser.SelectedItem = null;
+            comboBoxUser.SelectedItem = comboBoxBook.SelectedItem = null;
         }
 
         private void DeleteData(Borrowing brw)
@@ -159,7 +157,7 @@ namespace LibraryManagement
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
+            LoadData();
         }
 
         private void buttonCat_Click(object sender, EventArgs e)
@@ -170,11 +168,15 @@ namespace LibraryManagement
 
         private void dgvLoanData_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            status = "Completed";
-            if (e.ColumnIndex != 4)
+            if (e.ColumnIndex != 4 || e.RowIndex < 0)
                 return;
-            if (e.RowIndex < 0)
-                return;
+
+            dgvLoanData.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
+            //ganti warna kolom 
+            /*DataGridViewCellStyle cellStyle = new DataGridViewCellStyle();
+            cellStyle.BackColor = Color.Green;
+            dgvLoanData.Rows[e.RowIndex].Cells[e.ColumnIndex].Style = cellStyle;*/
         }
 
         private void buttonNewBorr_Click(object sender, EventArgs e)
@@ -186,6 +188,17 @@ namespace LibraryManagement
             textBoxID.Text = id == null ? "BR01" : $"BR{(int.Parse(id) + 1):D2}";
 
             _mode = Mode.Add;
+
+            //<--- perulangan --->//
+            /*foreach (DataGridViewRow row in dgvLoanData.Rows)
+            {
+                MessageBox.Show(row.Cells[0].Value.ToString());
+            }
+            for (int i = 0; i < dgvLoanData.Rows.Count; i++)
+            {
+                var row = dgvLoanData.Rows[i];
+                MessageBox.Show(row.Cells[0].Value.ToString());
+            }*/
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -213,9 +226,14 @@ namespace LibraryManagement
             if (_mode == Mode.None)
                 return;
 
-            AddButton();
             Clear();
             LoadData();
         }
+
+        private void dgvLoanData_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            MessageBox.Show(dgvLoanData.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+        }
+        
     }
 }
