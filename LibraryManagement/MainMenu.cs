@@ -33,7 +33,10 @@ namespace LibraryManagement
         private void MainMenu_Load(object sender, EventArgs e)
         {
             LoadData();
-            labelName.Text = LoginForm.CurrentUser;
+
+            labelName.Text = LoginForm.CurrentName;
+            labelClass.Text = LoginForm.CurrentClass;
+            labelDepartement.Text = LoginForm.CurrentDepart;
 
             groupBox1.Enabled = false;
 
@@ -225,7 +228,6 @@ namespace LibraryManagement
                 AddData();
             if (_mode == Mode.None)
                 return;
-
             Clear();
             LoadData();
         }
