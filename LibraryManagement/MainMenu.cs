@@ -15,7 +15,6 @@ namespace LibraryManagement
     public partial class MainMenu : Form
     {
         private readonly PerpusDatabase _db;
-        public string status = "OnGoing";
         private enum Mode {None, Add, Edit }
         private Mode _mode;
         private Borrowing _br;
@@ -31,20 +30,25 @@ namespace LibraryManagement
         private void MainMenu_Load(object sender, EventArgs e)
         {
             LoadData();
-            labelName.Text = LoginForm.CurrentUser;
+
+            labelName.Text = LoginForm.CurrentName;
+            labelClass.Text = LoginForm.CurrentClass;
+            labelDepartement.Text = LoginForm.CurrentDepart;
+
+            groupBox1.Enabled = false;
 
             comboBoxUser.DataSource = (from u in _db.Users select u.Name).ToList();
             comboBoxUser.SelectedItem = null;
 
             comboBoxBook.DataSource = (from b in _db.Books select b.Title).ToList();
             comboBoxBook.SelectedItem = null;
+           
 
-            dgvLoanData.Columns.Add(new DataGridViewButtonColumn()
-            {
-                Text = status,
-                HeaderText = "Status",
-                UseColumnTextForButtonValue = true
-            });
+            //dgvLoanData.Columns.Add(new DataGridViewCheckBoxColumn()
+            //{
+            //    HeaderText = "Status",
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+            //});
         }
 
         private void LoadData()
@@ -52,6 +56,7 @@ namespace LibraryManagement
             dgvLoanData.DataSource =
                 (
                 from brw in _db.Borrowings
+                where brw.Book.Title.Contains(textBox1.Text) || brw.User.Name.Contains(textBox1.Text)
                 select new
                 {
                     brw.Id,
@@ -60,6 +65,21 @@ namespace LibraryManagement
                     book = brw.Book.Title,
                 }
                 ).ToList();
+
+            /*var a = dgvLoanData.Rows[0];
+            
+            foreach (DataGridViewRow item in dgvLoanData.Rows)
+            {
+                var colValue = item.Cells[0].Value as string;
+
+                if (colValue.ToString().Contains("5"))
+                {
+                    a.DefaultCellStyle = new DataGridViewCellStyle
+                    {
+                        BackColor = Color.Red
+                    };
+                }
+            }*/
 
             /*dgvLoanData.DataSource =
                 (
@@ -81,19 +101,11 @@ namespace LibraryManagement
                 }
                 ).ToList();
             */
+
+
         }
 
-        private void AddButton()
-        {
-            dgvLoanData.Columns.Add(new DataGridViewButtonColumn()
-            {
-                Text = status,
-                HeaderText = "Status",
-                UseColumnTextForButtonValue = true
-            });
-        }
-
-/*        private void EditData()
+        /*private void EditData()
         {
             var b = _db.Borrowings.Find(textBoxID.Text);
 
@@ -115,6 +127,7 @@ namespace LibraryManagement
                 User = _db.Users.First(us => us.Name == comboBoxUser.Text),
                 Book = _db.Books.First(bu => bu.Title == comboBoxBook.Text)
             };
+
             _db.Borrowings.Add(bo);
             _db.SaveChanges();
         }
@@ -122,7 +135,7 @@ namespace LibraryManagement
         private void Clear()
         {
             textBoxID.Text = dateTimePicker1.Text = String.Empty;
-            comboBoxUser.SelectedItem = comboBoxUser.SelectedItem = null;
+            comboBoxUser.SelectedItem = comboBoxBook.SelectedItem = null;
         }
 
         private void DeleteData(Borrowing brw)
@@ -136,7 +149,11 @@ namespace LibraryManagement
             var problem = string.Empty;
 
             if (dateTimePicker1.Text == string.Empty)
-                problem += "Pick a date";
+                problem += " Pick a date";
+            if (comboBoxUser.SelectedItem == null)
+                problem += " Select a user";
+            if (comboBoxBook.SelectedItem == null)
+                problem += " Select a book to be borrowed";
             if (problem != string.Empty)
             {
                 MessageBox.Show(problem, "Invalid data!");
@@ -147,34 +164,41 @@ namespace LibraryManagement
 
         private void buttonUserData_Click(object sender, EventArgs e)
         {
+            Hide();
             UsersForm u = new UsersForm();
             u.Show();
         }
 
         private void buttonBook_Click(object sender, EventArgs e)
         {
+            Hide();
             BooksForm bk = new BooksForm();
             bk.Show();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
+            LoadData();
         }
 
         private void buttonCat_Click(object sender, EventArgs e)
         {
+            Hide();
             CategoryForm c = new CategoryForm();
             c.Show();
         }
 
         private void dgvLoanData_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            status = "Completed";
-            if (e.ColumnIndex != 4)
+            if (e.ColumnIndex != 4 || e.RowIndex < 0)
                 return;
-            if (e.RowIndex < 0)
-                return;
+
+            dgvLoanData.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
+            //ganti warna kolom 
+            /*DataGridViewCellStyle cellStyle = new DataGridViewCellStyle();
+            cellStyle.BackColor = Color.Green;
+            dgvLoanData.Rows[e.RowIndex].Cells[e.ColumnIndex].Style = cellStyle;*/
         }
 
         private void buttonNewBorr_Click(object sender, EventArgs e)
@@ -186,6 +210,17 @@ namespace LibraryManagement
             textBoxID.Text = id == null ? "BR01" : $"BR{(int.Parse(id) + 1):D2}";
 
             _mode = Mode.Add;
+
+            //<--- perulangan --->//
+            /*foreach (DataGridViewRow row in dgvLoanData.Rows)
+            {
+                MessageBox.Show(row.Cells[0].Value.ToString());
+            }
+            for (int i = 0; i < dgvLoanData.Rows.Count; i++)
+            {
+                var row = dgvLoanData.Rows[i];
+                MessageBox.Show(row.Cells[0].Value.ToString());
+            }*/
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -203,19 +238,75 @@ namespace LibraryManagement
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            buttonNewBorr.Enabled = buttonDelete.Enabled = true;
+            buttonNewBorr.Enabled = buttonDelete.Enabled = buttonEdit.Enabled = true;
             groupBox1.Enabled = false;
 
             if (!Validate())
+            {
+                Clear();
                 return;
+            }
             if (_mode == Mode.Add)
+            {
                 AddData();
+                Clear();
+            }
+            if (_mode == Mode.Edit)
+            {
+                EditData();
+                Clear();
+            }
             if (_mode == Mode.None)
+            {
                 return;
+            }
 
-            AddButton();
             Clear();
             LoadData();
+        }
+
+        private void dgvLoanData_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            /*if (dgvLoanData.RowCount <= 0)
+                return;
+
+            if (e.ColumnIndex==4)*/
+                /*MessageBox.Show(dgvLoanData.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());*/
+        }
+
+        private void EditData()
+        {
+            var borrow = _db.Borrowings.Find(textBoxID.Text);
+
+            borrow.Date = dateTimePicker1.Value.Date;
+            borrow.User = _db.Users.First(us => us.Name == comboBoxUser.Text);
+            borrow.Book = _db.Books.First(buk => buk.Title == comboBoxBook.Text);
+
+            _db.Borrowings.Update(borrow);
+            _db.SaveChanges();
+        }
+
+        private void buttonEdit_Click(object sender, EventArgs e)
+        {
+            groupBox1.Enabled = true;
+            buttonNewBorr.Enabled = buttonEdit.Enabled = false;
+
+            var id = dgvLoanData.SelectedRows[0].Cells[0].Value.ToString();
+            var b = _db.Borrowings.Find(id);
+            b.Book = _db.Books.Find(b.BookId);
+            b.User = _db.Users.Find(b.UserId);
+
+            textBoxID.Text = b.Id;
+            dateTimePicker1.Value = b.Date;
+            comboBoxBook.SelectedItem = b.Book.Title;
+            comboBoxUser.SelectedItem = b.User.Name;
+
+            _mode = Mode.Edit;
+        }
+
+        private void MainMenu_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
