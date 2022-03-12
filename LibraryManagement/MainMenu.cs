@@ -271,7 +271,7 @@ namespace LibraryManagement
                 return;
 
             if (e.ColumnIndex==4)*/
-                MessageBox.Show(dgvLoanData.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                /*MessageBox.Show(dgvLoanData.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());*/
         }
 
         private void EditData()
